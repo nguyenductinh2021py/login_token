@@ -2,6 +2,7 @@ from rest_framework import generics
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
+from rest_framework import permissions
 import jwt
 
 class RegisterView(generics.GenericAPIView):
@@ -26,3 +27,10 @@ class LoginView(generics.GenericAPIView):
             "user": UserSerializer(user, context=self.get_serializer_context()).data, 
             "token" : endcoded
         })
+
+class UserAPI(generics.RetrieveAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
+    serializer_class = UserSerializer
+
+    def get_object(self):
+        return self.request.user
